@@ -20,3 +20,44 @@
     text-align: center;
   }
 }
+
+/* Контейнер с аватаром */
+.profile__avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Сам аватар */
+.profile__image {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  transition: opacity 0.3s;
+}
+
+/* Кнопка редактирования аватара */
+.profile__avatar-edit-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6) url('../../images/edit-icon.svg') center no-repeat;
+  background-size: 24px 24px;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+/* Показываем иконку при наведении */
+.profile__avatar-container:hover .profile__avatar-edit-button {
+  opacity: 1;
+}
+

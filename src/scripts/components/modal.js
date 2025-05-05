@@ -1,7 +1,14 @@
-export function openModal(popup) {
+import { clearValidation } from './validation.js';
+
+export function openModal(popup, validationConfig) {
     popup.classList.add('popup_is-opened');
     document.addEventListener('keydown', handleEscClose);
     popup.addEventListener('mousedown', handleOverlayClose);
+
+    const form = popup.querySelector('.popup__form');
+    if (form) {
+        clearValidation(form, validationConfig);
+    }
 }
 
 export function closeModal(popup) {
