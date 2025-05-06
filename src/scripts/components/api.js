@@ -10,35 +10,56 @@ export function getUserInfo() {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers
     })
-        .then(response => response.ok ? response.json() : Promise.reject('Ошибка при получении данных пользователя'))
-        .catch(err => console.error('Произошла ошибка в getUserInfo:', err));
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Ошибка при получении данных пользователя');
+            }
+        });
 }
 
 export function getInitialCards() {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
     })
-        .then(response => response.ok ? response.json() : Promise.reject('Ошибка при загрузке карточек'))
-        .catch(err => console.error('Произошла ошибка в getInitialCards:', err));
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Ошибка при загрузке карточек');
+            }
+        });
 }
 
 export function updateUserInfo(name, about) {
     return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
         headers: config.headers,
-        body: JSON.stringify({ name, about })
+        body: JSON.stringify({ name: name, about: about })
     })
-        .then(response => response.ok ? response.json() : Promise.reject('Ошибка при обновлении профиля'))
-        .catch(err => console.error('Произошла ошибка в updateUserInfo:', err));
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Ошибка при обновлении профиля');
+            }
+        });
 }
 
 export function addNewCard(name, link) {
     return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
         headers: config.headers,
-        body: JSON.stringify({ name, link })
+        body: JSON.stringify({ name: name, link: link })
     })
-        .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`));
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Ошибка при добавлении новой карточки');
+            }
+        });
 }
 
 export function deleteCardFromServer(cardId) {
@@ -46,10 +67,12 @@ export function deleteCardFromServer(cardId) {
         method: 'DELETE',
         headers: config.headers
     })
-        .then(response => response.ok ? response.json() : Promise.reject('Не удалось удалить карточку'))
-        .catch(error => {
-            console.error('Ошибка при удалении карточки с сервера:', error);
-            throw error;
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Не удалось удалить карточку');
+            }
         });
 }
 
@@ -59,9 +82,39 @@ export function updateAvatar(avatarLink) {
         headers: config.headers,
         body: JSON.stringify({ avatar: avatarLink })
     })
-    .then(res => res.ok ? res.json() : Promise.reject('Ошибка при обновлении аватара'))
-    .catch(err => {
-        console.error('Произошла ошибка в updateAvatar:', err);
-        throw err;
-    });
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Ошибка при обновлении аватара');
+            }
+        });
+}
+
+export function likeCard(cardId) {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: config.headers
+    })
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Ошибка при добавлении лайка');
+            }
+        });
+}
+
+export function dislikeCard(cardId) {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: config.headers
+    })
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject('Ошибка при удалении лайка');
+            }
+        });
 }

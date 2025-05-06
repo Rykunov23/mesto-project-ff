@@ -1,4 +1,4 @@
-import { deleteCardFromServer, config } from './api.js';
+import { deleteCardFromServer, likeCard, dislikeCard } from './api.js';
 
 export function createCard(data, userId, handleDelete, handleLike, handleImageClick) {
     const cardTemplate = document.querySelector('#card-template').content;
@@ -10,17 +10,17 @@ export function createCard(data, userId, handleDelete, handleLike, handleImageCl
     const likeButton = cardElement.querySelector('.card__like-button');
     const likeCount = getOrCreateLikeCount(cardElement, likeButton);
 
-
     cardElement.dataset.cardId = data._id;
 
     setCardContent(cardImage, cardTitle, data);
-
     likeCount.textContent = data.likes.length;
 
+    if (data.likes.some(user => user._id === userId)) {
+        likeButton.classList.add('card__like-button_is-active');
+    }
+
     setupLikeButton(likeButton, likeCount, data._id);
-
     setupDeleteButton(deleteButton, userId, cardElement, handleDelete, data._id, data.owner._id);
-
     setupImageClickHandler(cardImage, data, handleImageClick);
 
     return cardElement;
@@ -64,28 +64,24 @@ function setupImageClickHandler(cardImage, data, handleImageClick) {
 
 export function handleLike(likeButton, likeCount, cardId) {
     const isLiked = likeButton.classList.contains('card__like-button_is-active');
-    const method = isLiked ? 'DELETE' : 'PUT';
+    const apiCall = isLiked ? dislikeCard(cardId) : likeCard(cardId);
 
-    fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-        method: method,
-        headers: config.headers
-    })
-        .then(response => response.json())
-        .then(data => {
+    apiCall
+        .then(function(data) {
             likeButton.classList.toggle('card__like-button_is-active');
             likeCount.textContent = data.likes.length;
         })
-        .catch(err => {
+        .catch(function(err) {
             console.error('Ошибка при изменении лайка:', err);
         });
 }
 
 export function handleDelete(cardElement, cardId) {
     deleteCardFromServer(cardId)
-        .then(() => {
+        .then(function() {
             cardElement.remove();
         })
-        .catch((err) => {
+        .catch(function(err) {
             console.error('Ошибка при удалении карточки с сервера:', err);
         });
 }

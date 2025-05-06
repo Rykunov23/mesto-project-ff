@@ -13,9 +13,8 @@ function hideInputError(formElement, inputElement, config) {
 }
 
 function checkInputValidity(formElement, inputElement, config) {
-    const regex = /^[a-zA-Zа-яА-ЯёЁ\s\-]+$/;
 
-    if (inputElement.type === 'text' && inputElement.value && !regex.test(inputElement.value)) {
+    if (inputElement.validity.patternMismatch) {
         const customMessage = inputElement.getAttribute('data-error-message');
         showInputError(formElement, inputElement, customMessage, config);
     } else if (!inputElement.validity.valid) {
